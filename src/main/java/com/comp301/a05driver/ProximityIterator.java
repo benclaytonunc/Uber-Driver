@@ -12,15 +12,16 @@ public class ProximityIterator {
             nextDriver(driverPool, clientPosition, proximityRange);
         }
     }
-    private Iterable<Driver> nextDriver(Iterable<Driver> driverPool, Position clientPosition, int ProximityRange){
+    private boolean nextDriver(Iterable<Driver> driverPool, Position clientPosition, int ProximityRange){
+        driverPool.iterator().next();
         while (driverPool.iterator().hasNext()) {
             if (clientPosition.getManhattanDistanceTo(driverPool.iterator().next().getVehicle().getPosition()) <= ProximityRange) {
                 Iterable<Driver> x = driverPool;
-                return x;
+                return true;
             } else {
                 driverPool.iterator().next();
             }
         }
-        return null;
+        return false;
     }
 }
