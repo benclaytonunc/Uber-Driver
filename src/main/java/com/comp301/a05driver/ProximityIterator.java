@@ -17,6 +17,8 @@ public class ProximityIterator {
             if (clientPosition.getManhattanDistanceTo(driverPool.iterator().next().getVehicle().getPosition()) <= ProximityRange) {
                 Iterable<Driver> x = driverPool;
                 return x;
+            } else {
+                driverPool.iterator().next();
             }
         }
         return null;
