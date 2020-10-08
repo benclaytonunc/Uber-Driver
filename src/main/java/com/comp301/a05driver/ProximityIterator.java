@@ -12,7 +12,7 @@ public class ProximityIterator {
         }
     }
     private boolean nextDriver(Iterable<Driver> driverPool, Position clientPosition, int ProximityRange) {
-
+        driverPool.iterator().next();
         Position x = driverPool.iterator().next().getVehicle().getPosition();
         int y = clientPosition.getManhattanDistanceTo(x);
         if (y <= ProximityRange) {
