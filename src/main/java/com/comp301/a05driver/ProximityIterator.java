@@ -3,7 +3,7 @@ package com.comp301.a05driver;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-public abstract class ProximityIterator implements Iterator<Driver> {
+public class ProximityIterator implements Iterator<Driver> {
     Iterable<Driver> driverPool;
     Iterator<Driver> driver;
     Driver driverAfter;
