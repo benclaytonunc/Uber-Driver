@@ -3,7 +3,7 @@ package com.comp301.a05driver;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-public class ProximityIterator {
+public abstract class ProximityIterator implements Iterator<Driver> {
     Iterable<Driver> driverPool;
     Iterator<Driver> driver;
     Driver driverAfter;
@@ -18,9 +18,10 @@ public class ProximityIterator {
         this.driverPool = driverPool;
         this.clientPosition = clientPosition;
         this.proximityRange = proximityRange;
-        driver.hasNext();
+       // driver.hasNext();
     }
 
+    @Override
     public boolean hasNext() {
         if (driverAfter == null) {
             this.addNextDriver();
@@ -28,6 +29,7 @@ public class ProximityIterator {
         return driverAfter != null;
     }
 
+    @Override
     public Driver next() {
         boolean tf = this.hasNext();
         if (!tf) {
