@@ -18,6 +18,7 @@ public class ProximityIterator {
         this.driverPool = driverPool;
         this.clientPosition = clientPosition;
         this.proximityRange = proximityRange;
+        driver.hasNext();
     }
 
     public boolean hasNext() {
