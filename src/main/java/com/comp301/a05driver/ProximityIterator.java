@@ -1,39 +1,55 @@
 package com.comp301.a05driver;
 
+import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 public class ProximityIterator {
-
+    Iterable<Driver> driverPool;
+    Iterator<Driver> driver;
+    Driver driverAfter;
+    Position clientPosition;
+    int proximityRange;
     public ProximityIterator(Iterable<Driver> driverPool, Position clientPosition, int proximityRange) {
-        if (!driverPool.iterator().hasNext()) {
-            throw new NoSuchElementException();
+        if (driverPool == null || clientPosition == null || proximityRange == 0) {
+            throw new IllegalArgumentException("no arg");
+        }
+        driver = driverPool.iterator();
+        driverAfter = null;
+        this.driverPool = driverPool;
+        this.clientPosition = clientPosition;
+        this.proximityRange = proximityRange;
+    }
+
+    public boolean hasNext() {
+        if (driverAfter == null) {
+            this.addNextDriver();
+        }
+        return driverAfter != null;
+    }
+
+    public Driver next() {
+        boolean tf = this.hasNext();
+        if (!tf) {
+            throw new NoSuchElementException("no elements found.");
         } else {
-            nextDriver(driverPool, clientPosition, proximityRange);
+            Driver nextDriver = driverAfter;
+            driverAfter = null;
+            return nextDriver;
         }
     }
-    private boolean nextDriver(Iterable<Driver> driverPool, Position clientPosition, int ProximityRange) {
-        driverPool.iterator().next();
-        Position x = driverPool.iterator().next().getVehicle().getPosition();
-        int y = clientPosition.getManhattanDistanceTo(x);
-        if (y <= ProximityRange) {
-            return true;
-        } else {
-            nextDriver(driverPool,clientPosition,ProximityRange);
-        }
-        return false;
-    }
-   /* private boolean nextDriver(Iterable<Driver> driverPool, Position clientPosition, int ProximityRange){
-        driverPool.iterator().next();
-        while (driverPool.iterator().hasNext()) {
-            if (clientPosition.getManhattanDistanceTo(driverPool.iterator().next().getVehicle().getPosition()) <= ProximityRange) {
-                Iterable<Driver> x = driverPool;
-                return true;
-            } else {
-                driverPool.iterator().next();
+
+    private void addNextDriver() {
+        if(driverAfter == null) {
+            boolean exists = false;
+            while(driver.hasNext() & !exists) {
+                Driver woman = driver.next();
+                Position womanPos = woman.getVehicle().getPosition();
+                int dist = clientPosition.getManhattanDistanceTo(womanPos);
+                if (dist <= proximityRange) {
+                    driverAfter = woman;
+                    exists = true;
+                }
             }
         }
-        return false;
     }
-
-    */
 }
