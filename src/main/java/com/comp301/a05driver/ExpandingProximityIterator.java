@@ -9,6 +9,9 @@ public class ExpandingProximityIterator implements Iterator<Driver> {
     Driver driverAfter;
     Position clientPosition;
     int expansionStep;
+    private int count = 0;
+    private int a = 0;
+    private int b = 0;
     public ExpandingProximityIterator(Iterable<Driver> driverPool, Position clientPosition, int expansionStep) {
         if (driverPool == null || clientPosition == null || expansionStep == 0){
             throw new IllegalArgumentException("wrong arg.");
@@ -18,57 +21,39 @@ public class ExpandingProximityIterator implements Iterator<Driver> {
         this.driverPool = driverPool;
         this.clientPosition = clientPosition;
         this.expansionStep = expansionStep;
+
+        while(driver.hasNext()) {
+            driver.next();
+            a++;
+        }
+        driver = driverPool.iterator();
     }
+
+
     @Override
     public boolean hasNext() {
-        if (driverAfter == null) {
-            this.DriverNarrower();
-        }
-        return driverAfter != null;
+        return b < a;
     }
 
     @Override
     public Driver next() {
-        boolean tf = this.hasNext();
-        if (!tf) {
-            throw new NoSuchElementException("no elements found.");
-        } else {
-            Driver nextDriver = driverAfter;
-            driverAfter = null;
-            return nextDriver;
+        if (!hasNext()) {
+            throw new NoSuchElementException();
         }
-    }
+        b++;
+        while (driverAfter == null) {
+            if(driver.hasNext()) {
+                Driver ring = driver.next();
+                int range = clientPosition.getManhattanDistanceTo(ring.getVehicle().getPosition());
 
-    private void DriverNarrower() {
-        if (driverAfter == null) {
-            while (driver.hasNext()) {
-                Driver woman = driver.next();
-                Position womanPos = woman.getVehicle().getPosition();
-                int dist = clientPosition.getManhattanDistanceTo(womanPos);
-                if (dist <= 1) {
-                    driverAfter = woman;
+                if ((range > (1 + ((count -1)* expansionStep)) && range <= 1 + (count * expansionStep))) {
+                    return ring;
                 }
+            } else {
+                driver = driverPool.iterator();
+                count++;
             }
-            driver = driverPool.iterator();
-            while (driver.hasNext()) {
-                Driver woman = driver.next();
-                Position womanPos = woman.getVehicle().getPosition();
-                int dist = clientPosition.getManhattanDistanceTo(womanPos);
-                if (dist > 1 & dist <= (1 + expansionStep)) {
-                    driverAfter = woman;
-                }
-            }
-            driver = driverPool.iterator();
-            while (driver.hasNext()) {
-                Driver woman = driver.next();
-                Position womanPos = woman.getVehicle().getPosition();
-                int dist = clientPosition.getManhattanDistanceTo(womanPos);
-                if (dist > (1+expansionStep) & dist <= (1 + (2*expansionStep))) {
-                    driverAfter = woman;
-                }
-            }
-
         }
-
+        return null;
     }
 }
